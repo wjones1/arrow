@@ -24,8 +24,8 @@
 #include "gandiva/engine.h"
 #include "gandiva/exported_funcs.h"
 #include "gandiva/in_holder.h"
-#include "gandiva/sql_like_holder.h"
 #include "gandiva/random_generator_holder.h"
+#include "gandiva/sql_like_holder.h"
 #include "gandiva/to_date_holder.h"
 
 /// Stub functions that can be accessed from LLVM or the pre-compiled library.
@@ -39,7 +39,7 @@ bool gdv_fn_like_utf8_utf8(int64_t ptr, const char* data, int data_len,
 }
 
 bool gdv_fn_regexp_matches_utf8_utf8(int64_t ptr, const char* data, int data_len,
-const char* pattern, int pattern_len) {
+                                     const char* pattern, int pattern_len) {
   return gdv_fn_like_utf8_utf8(ptr, data, data_len, pattern, pattern_len);
 }
 
@@ -242,9 +242,8 @@ void ExportedStubFunctions::AddMappings(Engine* engine) const {
           types->i32_type()};    // int pattern_len
 
   engine->AddGlobalMappingForFunc(
-            "gdv_fn_regexp_matches_utf8_utf8",
-            types->i1_type() /*return_type*/, args,
-            reinterpret_cast<void*>(gdv_fn_regexp_matches_utf8_utf8));
+      "gdv_fn_regexp_matches_utf8_utf8", types->i1_type() /*return_type*/, args,
+      reinterpret_cast<void*>(gdv_fn_regexp_matches_utf8_utf8));
 
   // gdv_fn_to_date_utf8_utf8
   args = {types->i64_type(),                   // int64_t execution_context
