@@ -46,8 +46,8 @@ const FunctionNode SQLLikeHolder::TryOptimize(const FunctionNode& node) {
       auto suffix = pattern.substr(2);  // skip .*
       auto suffix_node =
           std::make_shared<LiteralNode>(literal_type, LiteralHolder(suffix), false);
-        return FunctionNode("ends_with", {node.children().at(0), suffix_node},
-                            node.return_type());
+      return FunctionNode("ends_with", {node.children().at(0), suffix_node},
+                          node.return_type());
     } else if (RE2::FullMatch(pattern, is_substr_regex_)) {
       auto substr =
           pattern.substr(2, pattern.length() - 4);  // trim starting and ending .*

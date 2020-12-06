@@ -172,6 +172,11 @@ TEST_F(TestRegexpMatchesHolder, TestOptimise) {
   EXPECT_EQ(fnode.descriptor()->name(), "ends_with");
   EXPECT_EQ(fnode.ToString(), "bool ends_with((string) in, (const string) xyz)");
 
+  // optimise for 'is_substr'
+  fnode = RegexpMatchesHolder::TryOptimize(BuildRegexpMatches("xyz"));
+  EXPECT_EQ(fnode.descriptor()->name(), "is_substr");
+  EXPECT_EQ(fnode.ToString(), "bool is_substr((string) in, (const string) xyz)");
+
   // no optimisation for others.
   fnode = RegexpMatchesHolder::TryOptimize(BuildRegexpMatches("^xyz$"));
   EXPECT_EQ(fnode.descriptor()->name(), "regexp_matches");

@@ -25,6 +25,7 @@ namespace gandiva {
 
 RE2 RegexpMatchesHolder::starts_with_regex_(R"(\^([\w\s]+)(\.\*)?)");
 RE2 RegexpMatchesHolder::ends_with_regex_(R"((\.\*)?([\w\s]+)\$)");
+RE2 RegexpMatchesHolder::is_substr_regex_(R"((\w|\s)*)");
 
 // Short-circuit pattern matches for the two common sub cases :
 // - starts_with and ends_with.
@@ -44,6 +45,11 @@ const FunctionNode RegexpMatchesHolder::TryOptimize(const FunctionNode& node) {
       auto suffix_node =
           std::make_shared<LiteralNode>(literal_type, LiteralHolder(substr), false);
       return FunctionNode("ends_with", {node.children().at(0), suffix_node},
+                          node.return_type());
+    } else if (RE2::FullMatch(pattern, is_substr_regex_)) {
+      auto substr_node =
+          std::make_shared<LiteralNode>(literal_type, LiteralHolder(pattern), false);
+      return FunctionNode("is_substr", {node.children().at(0), substr_node},
                           node.return_type());
     }
   }
