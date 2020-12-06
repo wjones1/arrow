@@ -111,7 +111,7 @@ std::vector<NativeFunction> GetStringFunctionRegistry() {
                      kResultNullIfNull, "rtrim_utf8_utf8", NativeFunction::kNeedsContext),
 
       NativeFunction("btrim", {}, DataTypeVector{utf8(), utf8()}, utf8(),
-                     kResultNullIfNull, "btrim_utf8_utf8", NativeFunction::kNeedsContext),      
+                     kResultNullIfNull, "btrim_utf8_utf8", NativeFunction::kNeedsContext),
 
       NativeFunction("substr", {"substring"},
                      DataTypeVector{utf8(), int64() /*offset*/, int64() /*length*/},
