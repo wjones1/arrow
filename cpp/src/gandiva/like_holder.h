@@ -33,43 +33,43 @@
 namespace gandiva {
 
 class GANDIVA_EXPORT RegexpMatchesHolder : public FunctionHolder {
-  public:
-    static Status Make(const FunctionNode& node,
-                       std::shared_ptr<RegexpMatchesHolder>* holder);
+ public:
+  static Status Make(const FunctionNode& node,
+                     std::shared_ptr<RegexpMatchesHolder>* holder);
 
-    static Status Make(const std::string& pcre_pattern,
-                       std::shared_ptr<RegexpMatchesHolder>* holder);
+  static Status Make(const std::string& pcre_pattern,
+                     std::shared_ptr<RegexpMatchesHolder>* holder);
 
-    // Try and optimise a function node with a "regexp_matches" pattern.
-    static const FunctionNode TryOptimize(const FunctionNode& node);
+  // Try and optimise a function node with a "regexp_matches" pattern.
+  static const FunctionNode TryOptimize(const FunctionNode& node);
 
-    /// Return true if there is a match in the data.
-    bool operator()(const std::string& data) {
-      return RE2::PartialMatch(data, regex_);
-    }
+  /// Return true if there is a match in the data.
+  bool operator()(const std::string& data) {
+    return RE2::PartialMatch(data, regex_);
+  }
 
-  protected:
-    static Status ValidateArguments(const FunctionNode& node);
-    static Result<std::string> GetPattern(const FunctionNode& node);
+ protected:
+  static Status ValidateArguments(const FunctionNode& node);
+  static Result<std::string> GetPattern(const FunctionNode& node);
 
-  private:
-    explicit RegexpMatchesHolder(const std::string& pattern)
-      : pattern_(pattern), regex_(pattern) {}
+ private:
+  explicit RegexpMatchesHolder(const std::string& pattern)
+    : pattern_(pattern), regex_(pattern) {}
 
-    std::string pattern_;  // posix pattern string, to help debugging
-    RE2 regex_;            // compiled regex for the pattern
+  std::string pattern_;  // posix pattern string, to help debugging
+  RE2 regex_;            // compiled regex for the pattern
 
-    static RE2 starts_with_regex_;  // pre-compiled pattern for matching starts_with
-    static RE2 ends_with_regex_;    // pre-compiled pattern for matching ends_with
-    static RE2 is_substr_regex_;    // pre-compiled pattern for matching is_substr
+  static RE2 starts_with_regex_;  // pre-compiled pattern for matching starts_with
+  static RE2 ends_with_regex_;    // pre-compiled pattern for matching ends_with
+  static RE2 is_substr_regex_;    // pre-compiled pattern for matching is_substr
 };
 
 class GANDIVA_EXPORT SQLLikeHolder : public RegexpMatchesHolder {
-  public:
-    static Status Make(const FunctionNode& node,
-                       std::shared_ptr<SQLLikeHolder>* holder);
+ public:
+  static Status Make(const FunctionNode& node,
+                     std::shared_ptr<SQLLikeHolder>* holder);
 
-    static Status Make(const std::string& sql_pattern,
+  static Status Make(const std::string& sql_pattern,
                        std::shared_ptr<SQLLikeHolder>* holder);
 };
 

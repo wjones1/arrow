@@ -89,7 +89,6 @@ Result<std::string> RegexpMatchesHolder::GetPattern(const FunctionNode& node) {
 
 Status RegexpMatchesHolder::Make(const std::string& pcre_pattern,
                        std::shared_ptr<RegexpMatchesHolder>* holder) {
-
   auto lholder =
       std::shared_ptr<RegexpMatchesHolder>(new RegexpMatchesHolder(pcre_pattern));
   ARROW_RETURN_IF(!lholder->regex_.ok(),
@@ -106,7 +105,8 @@ Status RegexpMatchesHolder::Make(const FunctionNode& node,
   return Make(pattern, holder);
 }
 
-Status SQLLikeHolder::Make(const std::string& sql_pattern, std::shared_ptr<SQLLikeHolder>* holder) {
+Status SQLLikeHolder::Make(const std::string& sql_pattern,
+                           std::shared_ptr<SQLLikeHolder>* holder) {
   std::string pcre_pattern;
   ARROW_RETURN_NOT_OK(RegexUtil::SqlLikePatternToPcre(sql_pattern, pcre_pattern));
 
