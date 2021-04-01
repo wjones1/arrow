@@ -110,10 +110,10 @@ Status SQLLikeHolder::Make(const std::string& sql_pattern,
   std::string pcre_pattern;
   ARROW_RETURN_NOT_OK(RegexUtil::SqlLikePatternToPcre(sql_pattern, pcre_pattern));
 
-  std::shared_ptr<RegexpMatchesHolder>* base_holder;
-  RegexpMatchesHolder::Make(pcre_pattern, base_holder);
+  std::shared_ptr<RegexpMatchesHolder> base_holder;
+  RegexpMatchesHolder::Make(pcre_pattern, &base_holder);
 
-  *holder = std::static_pointer_cast<SQLLikeHolder>(*base_holder);;
+  *holder = std::static_pointer_cast<SQLLikeHolder>(base_holder);;
   return Status::OK();
 }
 
