@@ -25,7 +25,7 @@
 #include "gandiva/exported_funcs.h"
 #include "gandiva/in_holder.h"
 #include "gandiva/random_generator_holder.h"
-#include "gandiva/sql_like_holder.h"
+#include "gandiva/like_holder.h"
 #include "gandiva/to_date_holder.h"
 
 /// Stub functions that can be accessed from LLVM or the pre-compiled library.
@@ -34,7 +34,7 @@ extern "C" {
 
 bool gdv_fn_like_utf8_utf8(int64_t ptr, const char* data, int data_len,
                            const char* pattern, int pattern_len) {
-  gandiva::LikeHolder* holder = reinterpret_cast<gandiva::LikeHolder*>(ptr);
+  gandiva::RegexpMatchesHolder* holder = reinterpret_cast<gandiva::RegexpMatchesHolder*>(ptr);
   return (*holder)(std::string(data, data_len));
 }
 
