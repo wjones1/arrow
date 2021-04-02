@@ -56,6 +56,28 @@ const FunctionNode RegexpMatchesHolder::TryOptimize(const FunctionNode& node) {
   return node;
 }
 
+const FunctionNode SQLLikeHolder::TryOptimize(const FunctionNode& node) {
+  Result<std::string> pattern_result = GetPattern(node);
+  if (!pattern_result.ok()) {
+    return node;
+  }
+  std::string sql_pattern = pattern_result.ValueOrDie();
+
+  std::string pcre_pattern;
+  auto conversion_status = RegexUtil::SqlLikePatternToPcre(sql_pattern, pcre_pattern);
+  if (!conversion_status.ok()) {
+    return node;
+  }
+
+  auto literal_type = node.children().at(1)->return_type();
+  auto pcre_node =
+    std::make_shared<LiteralNode>(literal_type, LiteralHolder(pcre_pattern), false);
+  auto new_node = FunctionNode("regexp_matches", {node.children().at(0), pcre_node},
+                               node.return_type());
+
+  return RegexpMatchesHolder::TryOptimize(new_node);
+}
+
 static bool IsArrowStringLiteral(arrow::Type::type type) {
   return type == arrow::Type::STRING || type == arrow::Type::BINARY;
 }

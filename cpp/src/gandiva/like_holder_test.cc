@@ -251,7 +251,31 @@ TEST_F(TestSQLLikeHolder, TestRegexEscape) {
   auto status = RegexUtil::SqlLikePatternToPcre("#%hello#_abc_def##", '#', res);
   EXPECT_TRUE(status.ok()) << status.message();
 
-  EXPECT_EQ(res, "%hello_abc.def#");
+  EXPECT_EQ(res, "^%hello_abc.def#$");
+}
+
+TEST_F(TestSQLLikeHolder, Test) {
+  std::vector<std::tuple<std::string, std::string, char>> cases = {
+    {"test12", "^test12$", '\\'},
+    {"_test_test_", "^.test.test.$", '\\'},
+    {"%test%test%", "test.*test", '\\'},
+    {"\\%test.%", "^%test\\.", '\\'},
+    {"f%test.%", "^%test\\.", 'f'},
+    {"$25.00", "^\\$25\\.00$", '\\'},
+    {"\\test", "^\\\\test$", '#'}
+  };
+
+  for (auto&& test_case: cases) {
+    std::string pattern_like, pattern_pcre;
+    char escape_char;
+    std::tie(pattern_like, pattern_pcre, escape_char) = test_case;
+
+    std::string res;
+    auto status = RegexUtil::SqlLikePatternToPcre(pattern_like, escape_char, res);
+    EXPECT_TRUE(status.ok()) << status.message();
+
+    EXPECT_EQ(res, pattern_pcre);
+  }
 }
 
 TEST_F(TestSQLLikeHolder, TestDot) {
@@ -282,19 +306,19 @@ TEST_F(TestSQLLikeHolder, TestOptimise) {
 
   // no optimisation for others.
   fnode = SQLLikeHolder::TryOptimize(BuildLike("xyz_"));
-  EXPECT_EQ(fnode.descriptor()->name(), "like");
+  EXPECT_EQ(fnode.descriptor()->name(), "regexp_matches");
 
   fnode = SQLLikeHolder::TryOptimize(BuildLike("_xyz"));
-  EXPECT_EQ(fnode.descriptor()->name(), "like");
+  EXPECT_EQ(fnode.descriptor()->name(), "regexp_matches");
 
   fnode = SQLLikeHolder::TryOptimize(BuildLike("_xyz_"));
-  EXPECT_EQ(fnode.descriptor()->name(), "like");
+  EXPECT_EQ(fnode.descriptor()->name(), "regexp_matches");
 
   fnode = SQLLikeHolder::TryOptimize(BuildLike("%xyz_"));
-  EXPECT_EQ(fnode.descriptor()->name(), "like");
+  EXPECT_EQ(fnode.descriptor()->name(), "regexp_matches");
 
   fnode = SQLLikeHolder::TryOptimize(BuildLike("x_yz%"));
-  EXPECT_EQ(fnode.descriptor()->name(), "like");
+  EXPECT_EQ(fnode.descriptor()->name(), "regexp_matches");
 }
 
 }  // namespace gandiva

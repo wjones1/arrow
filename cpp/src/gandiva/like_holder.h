@@ -40,7 +40,7 @@ class GANDIVA_EXPORT RegexpMatchesHolder : public FunctionHolder {
   static Status Make(const std::string& pcre_pattern,
                      std::shared_ptr<RegexpMatchesHolder>* holder);
 
-  // Try and optimise a function node with a "regexp_matches" pattern.
+  /// Try and optimise a function node with a "regexp_matches" pattern.
   static const FunctionNode TryOptimize(const FunctionNode& node);
 
   /// Return true if there is a match in the data.
@@ -71,6 +71,9 @@ class GANDIVA_EXPORT SQLLikeHolder : public RegexpMatchesHolder {
 
   static Status Make(const std::string& sql_pattern,
                        std::shared_ptr<SQLLikeHolder>* holder);
+
+  /// Try and optimise a function node with a "like" pattern.
+  static const FunctionNode TryOptimize(const FunctionNode& node);
 };
 
 } // namespace gandiva
