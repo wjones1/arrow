@@ -16,7 +16,9 @@
 // under the License.
 
 #include "gandiva/like_holder.h"
+
 #include <regex>
+
 #include "gandiva/node.h"
 
 namespace gandiva {

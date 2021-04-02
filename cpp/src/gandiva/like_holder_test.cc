@@ -16,12 +16,13 @@
 // under the License.
 
 #include "gandiva/like_holder.h"
-#include "gandiva/regex_util.h"
+
+#include <gtest/gtest.h>
 
 #include <memory>
 #include <vector>
 
-#include <gtest/gtest.h>
+#include "gandiva/regex_util.h"
 
 namespace gandiva {
 
@@ -255,11 +256,10 @@ TEST_F(TestSQLLikeHolder, TestRegexEscape) {
 
 TEST_F(TestSQLLikeHolder, Test) {
   std::vector<std::tuple<std::string, std::string, char>> cases = {
-    {"test12", "^test12$", '\\'},        {"_test_test_", "^.test.test.$", '\\'},
-    {"%test%test%", "test.*test", '\\'}, {"\\%test.%", "^%test\\.", '\\'},
-    {"f%test.%", "^%test\\.", 'f'},      {"$25.00", "^\\$25\\.00$", '\\'},
-    {"\\test", "^\\\\test$", '#'}
-  };
+      {"test12", "^test12$", '\\'},        {"_test_test_", "^.test.test.$", '\\'},
+      {"%test%test%", "test.*test", '\\'}, {"\\%test.%", "^%test\\.", '\\'},
+      {"f%test.%", "^%test\\.", 'f'},      {"$25.00", "^\\$25\\.00$", '\\'},
+      {"\\test", "^\\\\test$", '#'}};
 
   for (auto&& test_case : cases) {
     std::string pattern_like, pattern_pcre;
