@@ -15,9 +15,9 @@
 // specific language governing permissions and limitations
 // under the License.
 
+#include "gandiva/like_holder.h"
 #include <regex>
 #include "gandiva/node.h"
-#include "gandiva/like_holder.h"
 
 namespace gandiva {
 
@@ -71,7 +71,7 @@ const FunctionNode SQLLikeHolder::TryOptimize(const FunctionNode& node) {
 
   auto literal_type = node.children().at(1)->return_type();
   auto pcre_node =
-    std::make_shared<LiteralNode>(literal_type, LiteralHolder(pcre_pattern), false);
+      std::make_shared<LiteralNode>(literal_type, LiteralHolder(pcre_pattern), false);
   auto new_node = FunctionNode("regexp_matches", {node.children().at(0), pcre_node},
                                node.return_type());
 
@@ -110,7 +110,7 @@ Result<std::string> RegexpMatchesHolder::GetPattern(const FunctionNode& node) {
 }
 
 Status RegexpMatchesHolder::Make(const std::string& pcre_pattern,
-                       std::shared_ptr<RegexpMatchesHolder>* holder) {
+                                 std::shared_ptr<RegexpMatchesHolder>* holder) {
   auto lholder =
       std::shared_ptr<RegexpMatchesHolder>(new RegexpMatchesHolder(pcre_pattern));
   ARROW_RETURN_IF(!lholder->regex_.ok(),
@@ -133,18 +133,17 @@ Status SQLLikeHolder::Make(const std::string& sql_pattern,
   ARROW_RETURN_NOT_OK(RegexUtil::SqlLikePatternToPcre(sql_pattern, pcre_pattern));
 
   std::shared_ptr<RegexpMatchesHolder> base_holder;
-  RegexpMatchesHolder::Make(pcre_pattern, &base_holder);
+  ARROW_RETURN_NOT_OK(RegexpMatchesHolder::Make(pcre_pattern, &base_holder));
 
-  *holder = std::static_pointer_cast<SQLLikeHolder>(base_holder);;
+  *holder = std::static_pointer_cast<SQLLikeHolder>(base_holder);
   return Status::OK();
 }
 
 Status SQLLikeHolder::Make(const FunctionNode& node,
-                                 std::shared_ptr<SQLLikeHolder>* holder) {
+                           std::shared_ptr<SQLLikeHolder>* holder) {
   ARROW_ASSIGN_OR_RAISE(std::string pattern, GetPattern(node));
 
   return Make(pattern, holder);
 }
 
-
-} // namespace gandiva
+}  // namespace gandiva

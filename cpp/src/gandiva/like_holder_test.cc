@@ -194,7 +194,6 @@ TEST_F(TestRegexpMatchesHolder, TestOptimise) {
   EXPECT_EQ(fnode.descriptor()->name(), "regexp_matches");
 }
 
-
 class TestSQLLikeHolder : public ::testing::Test {
  public:
   FunctionNode BuildLike(std::string pattern) {
@@ -256,16 +255,13 @@ TEST_F(TestSQLLikeHolder, TestRegexEscape) {
 
 TEST_F(TestSQLLikeHolder, Test) {
   std::vector<std::tuple<std::string, std::string, char>> cases = {
-    {"test12", "^test12$", '\\'},
-    {"_test_test_", "^.test.test.$", '\\'},
-    {"%test%test%", "test.*test", '\\'},
-    {"\\%test.%", "^%test\\.", '\\'},
-    {"f%test.%", "^%test\\.", 'f'},
-    {"$25.00", "^\\$25\\.00$", '\\'},
+    {"test12", "^test12$", '\\'},        {"_test_test_", "^.test.test.$", '\\'},
+    {"%test%test%", "test.*test", '\\'}, {"\\%test.%", "^%test\\.", '\\'},
+    {"f%test.%", "^%test\\.", 'f'},      {"$25.00", "^\\$25\\.00$", '\\'},
     {"\\test", "^\\\\test$", '#'}
   };
 
-  for (auto&& test_case: cases) {
+  for (auto&& test_case : cases) {
     std::string pattern_like, pattern_pcre;
     char escape_char;
     std::tie(pattern_like, pattern_pcre, escape_char) = test_case;

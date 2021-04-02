@@ -24,8 +24,8 @@
 #include "gandiva/engine.h"
 #include "gandiva/exported_funcs.h"
 #include "gandiva/in_holder.h"
-#include "gandiva/random_generator_holder.h"
 #include "gandiva/like_holder.h"
+#include "gandiva/random_generator_holder.h"
 #include "gandiva/to_date_holder.h"
 
 /// Stub functions that can be accessed from LLVM or the pre-compiled library.

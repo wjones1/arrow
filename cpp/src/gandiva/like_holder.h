@@ -27,8 +27,8 @@
 
 #include "gandiva/function_holder.h"
 #include "gandiva/node.h"
-#include "gandiva/visibility.h"
 #include "gandiva/regex_util.h"
+#include "gandiva/visibility.h"
 
 namespace gandiva {
 
@@ -44,9 +44,7 @@ class GANDIVA_EXPORT RegexpMatchesHolder : public FunctionHolder {
   static const FunctionNode TryOptimize(const FunctionNode& node);
 
   /// Return true if there is a match in the data.
-  bool operator()(const std::string& data) {
-    return RE2::PartialMatch(data, regex_);
-  }
+  bool operator()(const std::string& data) { return RE2::PartialMatch(data, regex_); }
 
  protected:
   static Status ValidateArguments(const FunctionNode& node);
@@ -54,7 +52,7 @@ class GANDIVA_EXPORT RegexpMatchesHolder : public FunctionHolder {
 
  private:
   explicit RegexpMatchesHolder(const std::string& pattern)
-    : pattern_(pattern), regex_(pattern) {}
+      : pattern_(pattern), regex_(pattern) {}
 
   std::string pattern_;  // posix pattern string, to help debugging
   RE2 regex_;            // compiled regex for the pattern
@@ -66,16 +64,15 @@ class GANDIVA_EXPORT RegexpMatchesHolder : public FunctionHolder {
 
 class GANDIVA_EXPORT SQLLikeHolder : public RegexpMatchesHolder {
  public:
-  static Status Make(const FunctionNode& node,
-                     std::shared_ptr<SQLLikeHolder>* holder);
+  static Status Make(const FunctionNode& node, std::shared_ptr<SQLLikeHolder>* holder);
 
   static Status Make(const std::string& sql_pattern,
-                       std::shared_ptr<SQLLikeHolder>* holder);
+                     std::shared_ptr<SQLLikeHolder>* holder);
 
   /// Try and optimise a function node with a "like" pattern.
   static const FunctionNode TryOptimize(const FunctionNode& node);
 };
 
-} // namespace gandiva
+}  // namespace gandiva
 
 #endif  // GANDIVA_REGEXP_MATCHES_HOLDER_H

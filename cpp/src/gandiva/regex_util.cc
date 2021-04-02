@@ -37,7 +37,8 @@ Status RegexUtil::SqlLikePatternToPcre(const std::string& sql_pattern, char esca
     }
 
     // Escape any char that is special for pcre regex
-    if (pcre_regex_specials_.find(cur) != pcre_regex_specials_.end() && cur != escape_char) {
+    if (pcre_regex_specials_.find(cur) != pcre_regex_specials_.end()
+        && cur != escape_char) {
       pcre_pattern += "\\";
     }
 
