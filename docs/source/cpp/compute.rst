@@ -19,6 +19,8 @@
 .. highlight:: cpp
 .. cpp:namespace:: arrow::compute
 
+.. _compute-cpp:
+
 =================
 Compute Functions
 =================
@@ -467,7 +469,7 @@ String transforms
   pattern contains groups, backreferencing can be used.
 
 * \(5) Output is the number of characters (not bytes) of each input element.
-  Output type is Int32 for String, Int64 for LargeString. 
+  Output type is Int32 for String, Int64 for LargeString.
 
 * \(6) Each UTF8-encoded character in the input is converted to lowercase or
   uppercase.
