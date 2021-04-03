@@ -37,6 +37,7 @@ files into Arrow structures.
    memory
    data
    compute
+   gandiva
    ipc
    filesystems
    filesystems_deprecated
